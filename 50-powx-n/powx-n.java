@@ -1,18 +1,13 @@
 class Solution {
     public double myPow(double x, int n) {
-        double ans =1.0;
-        long nn = n;
-        if(nn<0) nn=nn*-1;
-        while(nn>0){
-            if(nn%2==1){
-                ans=ans*x;
-                nn=nn-1;
-            }else{
-                x=x*x;
-                nn=nn/2;
-            }
-        }
+        long N = n;
+        if(n<0) return 1.0/helper(1.0, x, -N);
+        return helper(1.0, x, N);
+    }
 
-        return (n<0)?1.0/ans:ans;
+    public double helper(double ans, double x, long n){
+        if(n==0) return ans;
+        if(n%2==1) return helper(ans*x, x, n-1);
+        return helper(ans, x*x, n/2);
     }
 }
