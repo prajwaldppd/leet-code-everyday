@@ -1,28 +1,16 @@
 class Solution {
-    public int rob(int[] nums) {
-        int n = nums.length;
-        int[][] dp = new int[n+1][2];
-        for(int[] row: dp) Arrays.fill(row,-1);
-
-        return solve(0,0,nums,dp);
+    int[] dp;
+    public int solve(int[] nums, int i, int[] dp){
+        if(i>=nums.length) return 0;
+        if(dp[i]!=-1) return dp[i];
+        int steal = nums[i]+solve(nums,i+2,dp);
+        int skip = solve(nums,i+1,dp);
+        dp[i]= Math.max(steal,skip);
+        return dp[i];
     }
-
-    private int solve(int i, int previous, int[] nums, int[][] dp){
-        if(i>=nums.length){
-            return 0;
-        }
-        if(dp[i][previous]!=-1){
-            return dp[i][previous];
-        }
-
-        int skip = solve(i+1, 0, nums,dp);
-        int rob=0;
-        if(previous==0){
-            rob=nums[i]+solve(i+1,1,nums,dp);
-        }
-        dp[i][previous]= Math.max(skip,rob);
-        return dp[i][previous];
+    public int rob(int[] nums) {
+        dp = new int[nums.length];
+        Arrays.fill(dp,-1);
+        return solve(nums,0,dp);
     }
 }
-
-
