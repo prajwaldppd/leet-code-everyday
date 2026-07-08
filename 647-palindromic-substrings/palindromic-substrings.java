@@ -1,20 +1,18 @@
 class Solution {
-    int[][] t = new int [1001][1001];
     public int countSubstrings(String s) {
-        for(int [] row:t) Arrays.fill(row,-1);
         int n = s.length();
-        int ans =0;
-        for(int i=0;i<n;i++){
-            for(int j=i;j<n;j++){
-                if(isPalindrome(i,j,s)==1) ans++;
+        boolean[][] t = new boolean[n][n];
+        int count =0;
+        for(int len =1;len<=n;len++){
+            for(int i=0;i+len-1<n;i++){
+                int j = i+len-1;
+                if(i==j) t[i][j]=true;
+                else if(i+1==j) t[i][j]=s.charAt(i)==s.charAt(j);
+                else t[i][j]= (s.charAt(i)==s.charAt(j)) && t[i+1][j-1];
+                if(t[i][j]) count++;
             }
         }
-        return ans;
-    }
-    private int isPalindrome(int i,int j,String s){
-        if(i>=j) return 1;
-        if(t[i][j]!=-1) return t[i][j];
-        if(s.charAt(i)==s.charAt(j)) return t[i][j]=isPalindrome(i+1,j-1,s);
-        return t[i][j]=0;
+
+        return count;
     }
 }
