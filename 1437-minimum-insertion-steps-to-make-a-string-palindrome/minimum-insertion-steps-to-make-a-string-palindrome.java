@@ -1,26 +1,25 @@
 class Solution {
-int [][] t;
-    private int solve(String s, int i, int j){
-        if(i>j) return 0;
-        if(t[i][j]!=-1) return t[i][j];
-        if(s.charAt(i)==s.charAt(j)) return t[i][j]= solve(s,i+1,j-1);
-        return t[i][j]= 1+ Math.min(solve(s,i+1,j),solve(s,i,j-1));
-    }
     public int minInsertions(String s) {
-        t = new int[501][501];
-        for(int[]row: t) Arrays.fill(row,-1);
-        return solve(s,0,s.length()-1);
+        int n = s.length();
+        int [][] t = new int[n][n];
+        for(int len=1;len<=n;len++){
+            for(int i=0;i+len-1<n;i++){
+                int j = i+len-1;
+                if(i==j) t[i][j]=0;
+                else if(s.charAt(i)==s.charAt(j)) t[i][j]= t[i+1][j-1];
+                else t[i][j]=1+Math.min(t[i+1][j],t[i][j-1]);
+            }
+        }
+
+        return t[0][n-1];
     }
 }
 
 
-
-// mbadm
-// if i> j 0 end
-
-// if char at i== j => i+1,j-1;
-
-// if char at i not equal to char at j 
-// choice 1 => i insert j character at ith place so i,j-1;
-// else i insert ith character at jth place so i+1,j;
-
+// t[i][j] = no of characters req to insert from s(i,j);
+// for s it will be t[0,n-1];
+//need t[n][n] array
+// if i==j no need to insert anything 0;
+// if i+1 =j then check if same need to insert 1 and _ _ a b _ _ i insert 1 character then need to check 
+// i+1,j and i,j-1 min of them 
+// 
