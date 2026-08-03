@@ -3,26 +3,35 @@ class Solution {
         int n = graph.length;
         int[] vis = new int[n];
         Arrays.fill(vis,-1);
-        // -1 => not visited, 1=> group 1, 0=> group 2
+
         for(int i=0;i<n;i++){
             if(vis[i]==-1){
-                if(DFS(graph,i,vis,1)==false)  return false;
+                if(BFS(graph,i,vis,1)==false) return false;
             }
         }
         return true;
     }
 
-    private boolean DFS(int[][] graph, int u, int[] vis, int grp){
+    private boolean BFS(int[][] graph, int u, int[] vis, int grp){
         vis[u]=grp;
-        for(int v=0;v<graph[u].length;v++){
-            int neighbor = graph[u][v];
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(u);
+        q.offer(grp);
+        while(!q.isEmpty()){
+            int node = q.poll();
+            int col = q.poll();
+            for(int v=0;v<graph[node].length;v++){
+                int neighbour = graph[node][v];
+                if(vis[neighbour]==col) return false;
 
-            if(vis[neighbor]==grp) return false;
-
-            if(vis[neighbor]==-1){
-                if(DFS(graph,neighbor,vis,1-grp)==false)  return false;
+                if(vis[neighbour]==-1){
+                    vis[neighbour]=1-col;
+                    q.offer(neighbour);
+                    q.offer(1-col);
+                }
             }
         }
+
         return true;
     }
 }
