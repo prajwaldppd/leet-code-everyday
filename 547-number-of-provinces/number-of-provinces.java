@@ -1,6 +1,6 @@
 class Solution {
     public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
+                int n = isConnected.length;
         // total n cities. 
         // have to create a adj list 
         List<List<Integer>> adj = new ArrayList<>();
@@ -17,24 +17,22 @@ class Solution {
         }
         boolean [] vis = new boolean[n];
         int count =0;
-        Queue<Integer> q = new LinkedList<>();
+
         for(int i=0;i<n;i++){
             if(!vis[i]){
+                dfs(adj,i,vis);
                 count++;
-                vis[i]=true;
-                q.offer(i);
-            }
-            while(!q.isEmpty()){
-                int node = q.poll();
-                for(int v:adj.get(node)){
-                    if(!vis[v]){
-                    vis[v]=true;
-                    q.offer(v);
-                    }
-                }
             }
         }
 
         return count;
+    }
+    private void dfs(List<List<Integer>> adj,int u, boolean[] vis){
+        vis[u]=true;
+        for(int v:adj.get(u)){
+            if(!vis[v]){
+                dfs(adj,v,vis);
+            }
+        }
     }
 }
