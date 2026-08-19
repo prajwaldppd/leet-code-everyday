@@ -1,60 +1,40 @@
 class Solution {
     public int shortestPathBinaryMatrix(int[][] grid) {
+        // using dijsktras
+        //[[1,1],[0,1],[1,0],[-1,-1],[0,-1],[-1,0],[1,-1],[-1,1]] 
+        int[][] dirs = {{1, 1}, {0, 1}, {1, 0}, {-1, -1}, {0, -1}, {-1, 0}, {1, -1}, {-1, 1}};
         int m = grid.length;
         int n = grid[0].length;
-        // 0 to m-1 and 0 to n-1
-        if(grid[0][0]==1) return -1;
-        Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{0,0});
-        int count =0;
-        grid[0][0]=1;
+        if(m==0 || n==0 || grid[0][0]==1) return -1;
 
-        while(!q.isEmpty()){
-            int size=q.size();
-            count++;
-            for(int k=0;k<size;k++){
-                int[] cur = q.poll();
-                int i=cur[0];
-                int j = cur[1];
-                if(i==m-1 && j==n-1) return count;
-                if(i+1<m && grid[i+1][j]==0){
-                    q.offer(new int[]{i+1,j});
-                    grid[i+1][j]=1;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));
+        int[][] result = new int[m][n];
+        for(int[] a:result) Arrays.fill(a,Integer.MAX_VALUE);
+        result[0][0]=1;
+        pq.offer(new int[]{1,0,0});
+
+        while(!pq.isEmpty()){
+            int[] cur = pq.poll();
+            int dt = cur[0];
+            int x = cur[1];
+            int y = cur[2];
+
+            if(x==m-1 && y==n-1) return dt;
+            if(dt>result[x][y]) continue;
+
+            for(int[] d:dirs){ // all possilbe cases
+                int x_= x+d[0];
+                int y_= y+d[1];
+                if(x_>=0 && x_<m && y_>=0 && y_<n && grid[x_][y_]==0){
+                    if(1+dt<result[x_][y_]){
+                        result[x_][y_]=1+dt;
+                        pq.offer(new int[]{result[x_][y_],x_,y_});
+                        grid[x_][y_]=1;
+                    }
                 }
-                if(j+1<n && grid[i][j+1]==0){
-                    q.offer(new int[]{i,j+1});
-                    grid[i][j+1]=1;
-                }
-                if(i+1<m && j+1<n && grid[i+1][j+1]==0){
-                    q.offer(new int[]{i+1,j+1});
-                    grid[i+1][j+1]=1;
-                }
-                if(i-1>=0 && grid[i-1][j]==0){
-                    q.offer(new int[]{i-1,j});
-                    grid[i-1][j]=1;
-                }
-                if(j-1>=0 && grid[i][j-1]==0){
-                    q.offer(new int[]{i,j-1});
-                    grid[i][j-1]=1;
-                }
-                if(i-1>=0 && j-1>=0 && grid[i-1][j-1]==0){
-                    q.offer(new int[]{i-1,j-1});
-                    grid[i-1][j-1]=1;
-                }
-                if(i-1>=0 && j+1<n && grid[i-1][j+1]==0){
-                    q.offer(new int[]{i-1,j+1});
-                    grid[i-1][j+1]=1;
-                }
-                if(i+1<m && j-1>=0 && grid[i+1][j-1]==0){
-                    q.offer(new int[]{i+1,j-1});
-                    grid[i+1][j-1]=1;
-                }
-                
             }
-            
-
         }
-        return -1;
 
+        return -1;
     }
 }
